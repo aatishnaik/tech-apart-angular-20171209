@@ -1,9 +1,10 @@
 <div class="container">
   <div class="header">
     <h1 class="title">{{ title }}</h1>
+    <button class="add-trip-btn" (click)="showtrip()"> Show Trips </button>
   </div>
 
-  <div class="trips-list">
+  <div class="trips-list" *ngIf="flag">
     <div *ngIf="trips.length > 0">
       <div class="trip" *ngFor="let trip of trips">
         <div class="row">
