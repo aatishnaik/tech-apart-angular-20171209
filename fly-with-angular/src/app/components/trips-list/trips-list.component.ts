@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Trip } from '../../models/trip';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { Trip, Amount } from '../../models/trip';
+import { FormGroup, FormBuilder, FormControl, Validators, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-trips-list',
@@ -10,9 +10,14 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 export class TripsListComponent implements OnInit {
 
   title = 'Flights of a Lifetime';
+  pendingAmount = 0;
   addTripFormMode = false;
-  tripForm: FormGroup;
-
+  form: FormGroup;
+  trip: Amount = {
+    pamt: 0,
+    namt: 0,
+    tamt: 0
+  };
   trips: Array<Trip> = [
     {
       name: 'Super Flights to Mars',
@@ -44,12 +49,11 @@ export class TripsListComponent implements OnInit {
   }
 
   createForm() {
-    this.tripForm = this.fb.group({
-      name: new FormControl(),
-      price: new FormControl(),
-      duration: new FormControl(),
-      description: new FormControl(),
-      imageUrl: new FormControl()
+    this.form = this.fb.group({
+      name: new FormControl('', [Validators.required, Validators.minLength(8)]),
+      price: new FormControl(1200, Validators.required),
+      duration: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required),
     });
   }
 
@@ -58,16 +62,16 @@ export class TripsListComponent implements OnInit {
   }
 
   formSubmitted() {
+    if (this.form.valid) {
     const newTrip = {
-      name: this.tripForm.controls.name.value,
-      price: this.tripForm.controls.price.value,
-      duration: this.tripForm.controls.duration.value,
-      description: this.tripForm.controls.description.value,
-      image_url: this.tripForm.controls.imageUrl.value
+      name: this.form.controls.name.value,
+      price: this.form.controls.price.value,
+      duration: this.form.controls.duration.value,
+      description: this.form.controls.description.value,
     };
-
     this.trips.push(newTrip);
     this.toggleDisplayMode();
+  }
   }
 
 }
